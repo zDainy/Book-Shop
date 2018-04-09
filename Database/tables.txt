@@ -1,0 +1,58 @@
+CREATE TABLE public.customer
+(
+    id numeric NOT NULL DEFAULT nextval('customer_seq'),
+    login character varying NOT NULL,
+    password character varying NOT NULL,
+    PRIMARY KEY (id),
+    CONSTRAINT login_unq UNIQUE (login)
+)
+
+CREATE TABLE public.publishing
+(
+    id numeric NOT NULL DEFAULT nextval('publishing_seq'),
+    name character varying NOT NULL,
+    address character varying NOT NULL,
+    PRIMARY KEY (id)
+)
+
+CREATE TABLE public.book
+(
+    id numeric NOT NULL DEFAULT nextval('product_seq'),
+    name character varying NOT NULL,
+    year date NOT NULL,
+    price numeric NOT NULL,
+    publish numeric NOT NULL,
+    PRIMARY KEY (id),
+    CONSTRAINT publish_fk FOREIGN KEY (publish)
+        REFERENCES public.publishing (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+
+CREATE TABLE public."order"
+(
+    id numeric NOT NULL DEFAULT nextval('order_seq'),
+    customer numeric NOT NULL,
+    date_created date DEFAULT CURRENT_DATE,
+    PRIMARY KEY (id),
+    CONSTRAINT cust_fk FOREIGN KEY (customer)
+        REFERENCES public.customer (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)
+
+CREATE TABLE public.product_order
+(
+    id numeric NOT NULL DEFAULT nextval('prod_order_seq'),
+    book numeric NOT NULL,
+    "order" numeric NOT NULL,
+    PRIMARY KEY (id),
+    CONSTRAINT book_fk FOREIGN KEY (book)
+        REFERENCES public.book (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION,
+    CONSTRAINT order_fk FOREIGN KEY ("order")
+        REFERENCES public."order" (id) MATCH SIMPLE
+        ON UPDATE NO ACTION
+        ON DELETE NO ACTION
+)

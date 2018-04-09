@@ -1,0 +1,20 @@
+CREATE DATABASE "Book shop"
+    WITH 
+    OWNER = postgres
+    ENCODING = 'UTF8'
+    CONNECTION LIMIT = -1;
+
+CREATE SEQUENCE public.publishing_seq
+;
+
+CREATE SEQUENCE public.product_seq
+;
+
+CREATE SEQUENCE public.customer_seq
+;
+
+CREATE SEQUENCE public.order_seq
+;
+
+CREATE SEQUENCE public.prod_order_seq
+;
