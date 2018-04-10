@@ -17,9 +17,10 @@ public class BookDao {
         Date year = new Date();
         int price = 0;
         int publish = 0;
+        String imgSrc = "";
         try {
             PreparedStatement statement = DBService.getConnection().prepareStatement(
-                    "SELECT name, year, price, quantity, publish FROM book " +
+                    "SELECT name, year, price, quantity, publish, img_src FROM book " +
                             " WHERE id = ?;"
             );
             statement.setInt(1, id);
@@ -29,11 +30,12 @@ public class BookDao {
                 price = res.getInt("price");
                 year = res.getDate("year");
                 publish = res.getInt("publish");
+                imgSrc = res.getString("img_src");
             }
         } catch (Exception e) {
             System.out.print(e.getMessage());
         }
-        return new Book(id, name, year, price, publish);
+        return new Book(id, name, year, price, publish, imgSrc);
     }
 
     public static ArrayList<Book> getBooks(String bookIds, int minPriceFilter, int maxPriceFilter, String minYearFilter, String maxYearFilter, String nameFilter) {
@@ -44,8 +46,9 @@ public class BookDao {
         Date year;
         int price;
         int publish;
+        String imgSrc;
         try {
-            query = "SELECT id, name, year, price, publish FROM book";
+            query = "SELECT id, name, year, price, publish, img_src FROM book";
 
             query += " WHERE price BETWEEN " + minPriceFilter + " AND " + maxPriceFilter;
 
@@ -66,7 +69,8 @@ public class BookDao {
                 price = res.getInt("price");
                 year = res.getDate("year");
                 publish = res.getInt("publish");
-                books.add(new Book(id, name, year, price, publish));
+                imgSrc = res.getString("img_src");
+                books.add(new Book(id, name, year, price, publish, imgSrc));
             }
         } catch (Exception e) {
             System.out.print(e.getMessage());

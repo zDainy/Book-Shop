@@ -22,6 +22,7 @@ CREATE TABLE public.book
     year date NOT NULL,
     price numeric NOT NULL,
     publish numeric NOT NULL,
+    img_src character varying,
     PRIMARY KEY (id),
     CONSTRAINT publish_fk FOREIGN KEY (publish)
         REFERENCES public.publishing (id) MATCH SIMPLE

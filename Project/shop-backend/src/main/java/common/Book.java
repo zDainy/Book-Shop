@@ -8,13 +8,15 @@ public class Book {
     private Date year;
     private int price;
     private int publish;
+    private String imgSrc;
 
-    public Book(int id, String name, Date year, int price, int publish) {
+    public Book(int id, String name, Date year, int price, int publish, String imgSrc) {
         this.id = id;
         this.name = name;
         this.year = year;
         this.price = price;
         this.publish = publish;
+        this.imgSrc = imgSrc;
     }
 
     public int getId() {
@@ -55,5 +57,13 @@ public class Book {
 
     public void setPublish(int publish) {
         this.publish = publish;
+    }
+
+    public String getImgSrc() {
+        return imgSrc;
+    }
+
+    public void setImgSrc(String imgSrc) {
+        this.imgSrc = imgSrc;
     }
 }
