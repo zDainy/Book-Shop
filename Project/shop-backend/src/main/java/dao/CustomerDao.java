@@ -7,7 +7,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
 public class CustomerDao {
-
+    // проверка при попытке залогиниться
     public static boolean isAuthenticationSuccess(String login, String password) {
         int count = 0;
         try {
@@ -27,7 +27,7 @@ public class CustomerDao {
         }
         return count == 1;
     }
-
+    // получение id пользователя
     public static int getCustomerId(String login) {
         int id = 0;
         try {
@@ -45,7 +45,7 @@ public class CustomerDao {
         }
         return id;
     }
-
+    // Проверка на существование пользователя с таким логином
     public static boolean isCustomerExist(String login) {
         int count = 0;
         try {
@@ -63,7 +63,7 @@ public class CustomerDao {
         }
         return count == 1;
     }
-
+    // Создание пользователя
     public static void createCustomer(String login, String password) {
         try {
             PreparedStatement statement = DBService.getConnection().prepareStatement(

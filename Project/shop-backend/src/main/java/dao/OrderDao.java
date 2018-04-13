@@ -9,6 +9,7 @@ import java.util.Date;
 
 public class OrderDao {
 
+    // Получениесписка книг в заказе
     public static ArrayList<Book> getBooksInOrder(String login) {
         String bookIds = "";
         boolean isFirst = true;
@@ -29,36 +30,14 @@ public class OrderDao {
         } catch (Exception e) {
             System.out.print(e.getMessage());
         }
-        return BookDao.getBooks(bookIds, 0, 999999, Global.NONE, Global.NONE, Global.NONE);
+        return BookDao.getBooks(bookIds, 0, 999999, 1970, 2018, -1);
     }
-
-    public static ArrayList<Order> getOrders(int customerId) {
-        ArrayList<Order> orders = new ArrayList<>();
-        int orderId;
-        Date dateCreated;
-        try {
-            PreparedStatement statement = DBService.getConnection().prepareStatement(
-                    "SELECT id, customer, date_created FROM \"order\""+
-                            " WHERE customer = ?;"
-            );
-            statement.setInt(1, customerId);
-            ResultSet res = statement.executeQuery();
-            while (res.next()) {
-                orderId = res.getInt("id");
-                dateCreated = res.getDate("date_created");
-                orders.add(new Order(orderId, customerId, dateCreated));
-            }
-        } catch (Exception e) {
-            System.out.print(e.getMessage());
-        }
-        return orders;
-    }
-
+    // Очищение корзины
     public static void clearShopCart(String login) {
         try {
             int custId = CustomerDao.getCustomerId(login);
             PreparedStatement statement = DBService.getConnection().prepareStatement(
-                    "DELETE FROM product_order WHERE id = (SELECT id FROM \"order\" WHERE customer = ?);"
+                    "DELETE FROM product_order WHERE \"order\" = (SELECT id FROM \"order\" WHERE customer = ?);"
             );
             statement.setInt(1, custId);
             statement.executeQuery();
@@ -66,12 +45,12 @@ public class OrderDao {
             System.out.print(e.getMessage());
         }
     }
-
+    // Удаление книги из корзины
     public static void deleteProductFromCart(String login, int productId) {
         try {
             int custId = CustomerDao.getCustomerId(login);
             PreparedStatement statement = DBService.getConnection().prepareStatement(
-                    "DELETE FROM product_order WHERE book = ? AND id = (SELECT id FROM \"order\" WHERE customer = ?);"
+                    "DELETE FROM product_order WHERE book = ? AND \"order\" = (SELECT id FROM \"order\" WHERE customer = ?);"
             );
             statement.setInt(1, productId);
             statement.setInt(2, custId);
@@ -80,7 +59,7 @@ public class OrderDao {
             System.out.print(e.getMessage());
         }
     }
-
+    // Добавление книги в корзину
     public static void addBookToCart(String login, int productId) {
         int count = 0;
         int orderId = 0;

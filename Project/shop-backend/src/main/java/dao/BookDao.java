@@ -8,58 +8,31 @@ import common.Publishing;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
-import java.util.Date;
 
 public class BookDao {
-
-    public static Book getBook(Integer id) {
-        String name ="";
-        Date year = new Date();
-        int price = 0;
-        int publish = 0;
-        String imgSrc = "";
-        try {
-            PreparedStatement statement = DBService.getConnection().prepareStatement(
-                    "SELECT name, year, price, quantity, publish, img_src FROM book " +
-                            " WHERE id = ?;"
-            );
-            statement.setInt(1, id);
-            ResultSet res = statement.executeQuery();
-            if (res.next()) {
-                name = res.getString("name");
-                price = res.getInt("price");
-                year = res.getDate("year");
-                publish = res.getInt("publish");
-                imgSrc = res.getString("img_src");
-            }
-        } catch (Exception e) {
-            System.out.print(e.getMessage());
-        }
-        return new Book(id, name, year, price, publish, imgSrc);
-    }
-
-    public static ArrayList<Book> getBooks(String bookIds, int minPriceFilter, int maxPriceFilter, String minYearFilter, String maxYearFilter, String nameFilter) {
+    // Функция получения списка книг с фильтрами
+    public static ArrayList<Book> getBooks(String bookIds, int minPriceFilter, int maxPriceFilter, int minYearFilter, int maxYearFilter, int publishId) {
         ArrayList<Book> books = new ArrayList<>();
         int id;
         String query;
         String name;
-        Date year;
+        int year;
         int price;
         int publish;
         String imgSrc;
         try {
             query = "SELECT id, name, year, price, publish, img_src FROM book";
-
+            // цена между minPriceFilter и maxPriceFilter
             query += " WHERE price BETWEEN " + minPriceFilter + " AND " + maxPriceFilter;
-
+            // цена между minYearFilter и maxYearFilter
+            query += " AND " + "year BETWEEN " + minYearFilter + " AND " + maxYearFilter;
+            // id книг
             if (!bookIds.equals(Global.NONE)) {
                 query += " AND " + "id IN (" + bookIds + ")";
             }
-            if (!minYearFilter.equals(Global.NONE) && !maxYearFilter.equals(Global.NONE)) {
-                query += " AND " + "year BETWEEN " + minYearFilter + " AND " + maxYearFilter;
-            }
-            if (!nameFilter.equals(Global.NONE)) {
-                query += " AND " + "name LIKE '%" + nameFilter + "%'";
+            // Издательство
+            if (publishId != -1) {
+                query += " AND " + "publish = " + publishId + "";
             }
 
             ResultSet res = DBService.getConnection().createStatement().executeQuery(query);
@@ -67,7 +40,7 @@ public class BookDao {
                 id = res.getInt("id");
                 name = res.getString("name");
                 price = res.getInt("price");
-                year = res.getDate("year");
+                year = res.getInt("year");
                 publish = res.getInt("publish");
                 imgSrc = res.getString("img_src");
                 books.add(new Book(id, name, year, price, publish, imgSrc));
@@ -77,7 +50,7 @@ public class BookDao {
         }
         return books;
     }
-
+    // Получение издатество по id книги
     public static Publishing getPublishingByBookId(int bookId) {
         int id = 0;
         String name = "";
@@ -88,7 +61,7 @@ public class BookDao {
                    " WHERE b.publish = p.id" +
                    " AND b.id = ?;"
             );
-            statement.setInt(1, id);
+            statement.setInt(1, bookId);
             ResultSet res = statement.executeQuery();
             if (res.next()) {
                 id = res.getInt("id");

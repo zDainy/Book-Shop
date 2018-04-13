@@ -19,7 +19,7 @@ CREATE TABLE public.book
 (
     id numeric NOT NULL DEFAULT nextval('product_seq'),
     name character varying NOT NULL,
-    year date NOT NULL,
+    year numeric NOT NULL,
     price numeric NOT NULL,
     publish numeric NOT NULL,
     img_src character varying,

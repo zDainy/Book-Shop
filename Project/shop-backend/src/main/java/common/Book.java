@@ -1,22 +1,29 @@
 package common;
 
-import java.util.Date;
+import dao.BookDao;
 
 public class Book {
     private int id;
     private String name;
-    private Date year;
+    private int year;
     private int price;
     private int publish;
     private String imgSrc;
+    private String publishName;
 
-    public Book(int id, String name, Date year, int price, int publish, String imgSrc) {
+    public Book(int id, String name, int year, int price, int publish, String imgSrc) {
         this.id = id;
         this.name = name;
         this.year = year;
         this.price = price;
         this.publish = publish;
         this.imgSrc = imgSrc;
+        publishName = getPublishingName();
+    }
+
+    private String getPublishingName() {
+        Publishing p = BookDao.getPublishingByBookId(this.id);
+        return p.getName();
     }
 
     public int getId() {
@@ -35,11 +42,11 @@ public class Book {
         this.name = name;
     }
 
-    public Date getYear() {
+    public int getYear() {
         return year;
     }
 
-    public void setYear(Date year) {
+    public void setYear(int year) {
         this.year = year;
     }
 
@@ -65,5 +72,13 @@ public class Book {
 
     public void setImgSrc(String imgSrc) {
         this.imgSrc = imgSrc;
+    }
+
+    public String getPublishName() {
+        return publishName;
+    }
+
+    public void setPublishName(String publishName) {
+        this.publishName = publishName;
     }
 }
